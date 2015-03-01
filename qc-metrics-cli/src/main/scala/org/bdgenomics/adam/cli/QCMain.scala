@@ -32,10 +32,11 @@ object QCMain extends Logging {
         "QC",
         List(
           FindReads,
-          CompareADAM
-        )
-      )
-    )
+          CompareADAM)),
+      CommandGroup(
+        "PRINT",
+        List(
+          SummarizeGenotypes)))
 
   private def printCommands() {
     println("\n")

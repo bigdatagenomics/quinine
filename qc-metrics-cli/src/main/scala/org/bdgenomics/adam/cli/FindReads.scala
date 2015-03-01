@@ -20,15 +20,15 @@ package org.bdgenomics.adam.cli
 import java.io.OutputStreamWriter
 import java.util.regex.Pattern
 
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.metrics.filters.{CombinedFilter, GeneratorFilter}
-import org.bdgenomics.adam.metrics.{BucketComparisons, DefaultComparisons}
+import org.bdgenomics.adam.metrics.filters.{ CombinedFilter, GeneratorFilter }
+import org.bdgenomics.adam.metrics.{ BucketComparisons, DefaultComparisons }
 import org.bdgenomics.adam.models.ReadBucket
-import org.kohsuke.args4j.{Argument, Option => Args4jOption}
+import org.kohsuke.args4j.{ Argument, Option => Args4jOption }
 
 import scala.collection.Seq
 

@@ -17,20 +17,20 @@
  */
 package org.bdgenomics.adam.cli
 
-import java.io.{OutputStreamWriter, PrintWriter}
+import java.io.{ OutputStreamWriter, PrintWriter }
 
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.metrics.{BucketComparisons, CombinedComparisons, DefaultComparisons}
+import org.bdgenomics.adam.metrics.{ BucketComparisons, CombinedComparisons, DefaultComparisons }
 import org.bdgenomics.adam.projections.AlignmentRecordField._
 import org.bdgenomics.adam.projections.FieldValue
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.adam.rdd.read.comparisons.ComparisonTraversalEngine
-import org.bdgenomics.utils.metrics.aggregators.{AggregatedCollection, CombinedAggregator, HistogramAggregator, Writable}
-import org.bdgenomics.utils.metrics.{Collection, Histogram}
-import org.kohsuke.args4j.{Argument, CmdLineParser, Option => Args4jOption}
+import org.bdgenomics.utils.metrics.aggregators.{ AggregatedCollection, CombinedAggregator, HistogramAggregator, Writable }
+import org.bdgenomics.utils.metrics.{ Collection, Histogram }
+import org.kohsuke.args4j.{ Argument, CmdLineParser, Option => Args4jOption }
 
 import scala.collection.Seq
 
