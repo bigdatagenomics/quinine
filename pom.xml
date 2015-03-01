@@ -33,6 +33,7 @@
   
   <modules>
     <module>qc-metrics-core</module>
+    <module>qc-metrics-cli</module>
   </modules>
   
   <licenses>
@@ -312,6 +313,11 @@
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
         <artifactId>adam-core</artifactId>
+        <version>${adam.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bdgenomics.adam</groupId>
+        <artifactId>adam-cli</artifactId>
         <version>${adam.version}</version>
       </dependency>
       <dependency>
