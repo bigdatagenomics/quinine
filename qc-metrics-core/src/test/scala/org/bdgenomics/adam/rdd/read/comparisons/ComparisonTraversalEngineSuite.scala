@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.read.comparisons
+package org.bdgenomics.qc.rdd.read.comparisons
 
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.metrics.MappedPosition
 import org.bdgenomics.adam.projections.AlignmentRecordField
 import org.bdgenomics.adam.util.ADAMFunSuite
 import org.bdgenomics.formats.avro.{ AlignmentRecord, Contig }
+import org.bdgenomics.qc.metrics.MappedPosition
 import org.bdgenomics.utils.metrics.Histogram
 import org.bdgenomics.utils.metrics.aggregators.HistogramAggregator
 

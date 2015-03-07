@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.cli
+package org.bdgenomics.qc.cli
 
 import java.io.OutputStreamWriter
 import java.util.regex.Pattern
-
 import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.metrics.filters.{ CombinedFilter, GeneratorFilter }
-import org.bdgenomics.adam.metrics.{ BucketComparisons, DefaultComparisons }
+import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.models.ReadBucket
+import org.bdgenomics.qc.metrics.filters.{ CombinedFilter, GeneratorFilter }
+import org.bdgenomics.qc.metrics.{ BucketComparisons, DefaultComparisons }
 import org.kohsuke.args4j.{ Argument, Option => Args4jOption }
 
 import scala.collection.Seq

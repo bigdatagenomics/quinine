@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.cli
+package org.bdgenomics.qc.cli
 
 import java.io.{ BufferedWriter, OutputStreamWriter }
 
@@ -24,9 +24,10 @@ import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{ Logging, SparkContext }
+import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.rdd.ADAMContext._
-import org.bdgenomics.adam.rdd.variation.{ GenotypesSummary, GenotypesSummaryFormatting }
 import org.bdgenomics.formats.avro.Genotype
+import org.bdgenomics.qc.rdd.variation.{ GenotypesSummary, GenotypesSummaryFormatting }
 import org.kohsuke.args4j
 
 object SummarizeGenotypes extends ADAMCommandCompanion {
@@ -54,7 +55,7 @@ class SummarizeGenotypes(val args: SummarizeGenotypesArgs) extends ADAMSparkComm
   val companion = SummarizeGenotypes
 
   def run(sc: SparkContext, job: Job) {
-    val adamGTs: RDD[Genotype] = sc.adamLoad(args.adamFile)
+    val adamGTs: RDD[Genotype] = sc.loadGenotypes(args.adamFile)
     val stats = GenotypesSummary(adamGTs)
     val result = args.format match {
       case "human" => GenotypesSummaryFormatting.format_human_readable(stats)

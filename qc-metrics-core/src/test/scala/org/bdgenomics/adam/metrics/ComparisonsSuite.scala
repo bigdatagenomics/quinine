@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.metrics
+package org.bdgenomics.qc.metrics
 
 import org.bdgenomics.adam.models.SingleReadBucket
 import org.bdgenomics.adam.util.ADAMFunSuite

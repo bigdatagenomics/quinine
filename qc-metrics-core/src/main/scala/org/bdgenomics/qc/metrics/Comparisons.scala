@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.metrics
+package org.bdgenomics.qc.metrics
 
 import java.util.regex.Pattern
-import org.bdgenomics.adam.metrics.filters.ComparisonsFilter
 import org.bdgenomics.adam.models.ReadBucket
 import org.bdgenomics.adam.projections.FieldValue
+import org.bdgenomics.qc.metrics.filters.ComparisonsFilter
 import org.bdgenomics.utils.metrics.Collection
 
 trait BucketComparisons[+T] {

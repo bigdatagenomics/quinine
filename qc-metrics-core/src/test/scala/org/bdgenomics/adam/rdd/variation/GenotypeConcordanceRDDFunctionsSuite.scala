@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.variation
+package org.bdgenomics.qc.rdd.variation
 
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.adam.util.ADAMFunSuite
 import org.bdgenomics.formats.avro._
+import org.bdgenomics.qc.rdd.QCContext._
 
 class GenotypeConcordanceRDDFunctionsSuite extends ADAMFunSuite {
   def v0 = Variant.newBuilder
@@ -38,16 +39,16 @@ class GenotypeConcordanceRDDFunctionsSuite extends ADAMFunSuite {
 
     val g0 = gb.build
     val g1 = gb.build
-    val tables0 = sc.parallelize(Seq(g0)).concordanceWith(sc.parallelize(Seq(g1))).collectAsMap
+    val tables0: scala.collection.Map[String, ConcordanceTable] = sc.parallelize(Seq(g0)).concordanceWith(sc.parallelize(Seq(g1))).collectAsMap
     assert(tables0.size === 1)
-    val table0 = tables0.getOrElse("NA12878", ConcordanceTable())
+    val table0: ConcordanceTable = tables0.getOrElse("NA12878", ConcordanceTable())
     assert(table0.total === 1)
     assert(table0.get(GenotypeType.HET, GenotypeType.HET) === 1)
 
     val g2 = gb.setAlleles(List(GenotypeAllele.Ref, GenotypeAllele.Ref)).build
-    val table1 = sc.parallelize(Seq(g0))
+    val tables1: scala.collection.Map[String, ConcordanceTable] = sc.parallelize(Seq(g0))
       .concordanceWith(sc.parallelize(Seq(g2))).collectAsMap()
-      .getOrElse("NA12878", ConcordanceTable())
+    val table1: ConcordanceTable = tables1.getOrElse("NA12878", ConcordanceTable())
     assert(table1.total === 1)
     assert(table1.get(GenotypeType.HET, GenotypeType.HOM_REF) === 1)
   }
@@ -58,10 +59,10 @@ class GenotypeConcordanceRDDFunctionsSuite extends ADAMFunSuite {
     val gts: RDD[Genotype] = sc.loadGenotypes(path)
     assert(gts.filter(_.getSampleId == "NA12878").count === 5)
 
-    val tables = gts.concordanceWith(gts).collectAsMap
+    val tables: scala.collection.Map[String, ConcordanceTable] = gts.concordanceWith(gts).collectAsMap
     assert(tables.size === 3L)
 
-    val table0 = tables.getOrElse("NA12878", ConcordanceTable())
+    val table0: ConcordanceTable = tables.getOrElse("NA12878", ConcordanceTable())
     assert(table0.total === 5L)
     assert(table0.concordance === 1.0)
   }

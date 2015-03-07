@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.variation
+package org.bdgenomics.qc.rdd.variation
 
 import java.util.EnumSet
 
@@ -45,7 +45,7 @@ object ConcordanceTable {
  * to "truth" genotypes.
  */
 class ConcordanceTable {
-  import org.bdgenomics.adam.rdd.variation.ConcordanceTable._
+  import org.bdgenomics.qc.rdd.variation.ConcordanceTable._
 
   private val table_ = Array.fill[Long](GenotypeType.values.length, GenotypeType.values.length)(0L)
 
