@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.variation
+package org.bdgenomics.qc.rdd.variation
 
 import org.bdgenomics.adam.rdd.ADAMContext._
-import org.bdgenomics.adam.rdd.variation.GenotypesSummaryCounts.ReferenceAndAlternate
 import org.bdgenomics.adam.util.ADAMFunSuite
+import org.bdgenomics.qc.rdd.variation.GenotypesSummaryCounts.ReferenceAndAlternate
 import org.bdgenomics.formats.avro._
 
 class GenotypesSummarySuite extends ADAMFunSuite {

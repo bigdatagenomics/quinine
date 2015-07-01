@@ -15,18 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.read.comparisons
+package org.bdgenomics.qc.rdd.read.comparisons
 
 import org.apache.hadoop.fs.Path
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.metrics.BucketComparisons
-import org.bdgenomics.adam.metrics.filters.GeneratorFilter
 import org.bdgenomics.adam.models.ReadBucket
 import org.bdgenomics.adam.projections.{ FieldValue, Projection }
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.AlignmentRecord
+import org.bdgenomics.qc.metrics.BucketComparisons
+import org.bdgenomics.qc.metrics.filters.GeneratorFilter
 import org.bdgenomics.utils.metrics.aggregators.{ Aggregated, Aggregator }
 
 import scala.reflect.ClassTag

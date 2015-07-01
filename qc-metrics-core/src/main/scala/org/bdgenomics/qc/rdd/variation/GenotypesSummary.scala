@@ -15,14 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.rdd.variation
+package org.bdgenomics.qc.rdd.variation
 
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.rdd.variation.GenotypesSummary.StatisticsMap
-import org.bdgenomics.adam.rdd.variation.GenotypesSummaryCounts.ReferenceAndAlternate
 import org.bdgenomics.adam.rich.RichVariant._
 import org.bdgenomics.formats.avro.{ Genotype, GenotypeAllele }
-
+import org.bdgenomics.qc.rdd.variation.GenotypesSummary.StatisticsMap
+import org.bdgenomics.qc.rdd.variation.GenotypesSummaryCounts.ReferenceAndAlternate
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Map
 import scala.collection.mutable

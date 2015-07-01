@@ -27,7 +27,7 @@
     <hadoop.version>2.2.0</hadoop.version>
     <scoverage.version>0.99.2</scoverage.version>
 
-    <adam.version>0.16.0</adam.version>
+    <adam.version>0.16.1-SNAPSHOT</adam.version>
     <utils.version>0.1.2</utils.version>
   </properties>
   

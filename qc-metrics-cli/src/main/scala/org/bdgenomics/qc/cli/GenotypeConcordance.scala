@@ -15,17 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.cli
+package org.bdgenomics.qc.cli
 
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{ Logging, SparkContext }
+import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.predicates.GenotypeRecordPASSPredicate
 import org.bdgenomics.adam.projections.GenotypeField
 import org.bdgenomics.adam.rdd.ADAMContext._
-import org.bdgenomics.adam.rdd.variation.ConcordanceTable
 import org.bdgenomics.formats.avro.Genotype
+import org.bdgenomics.qc.rdd.QCContext._
+import org.bdgenomics.qc.rdd.variation.ConcordanceTable
 import org.kohsuke.args4j.{ Argument, Option => Args4jOption }
 
 object GenotypeConcordance extends ADAMCommandCompanion {
@@ -62,8 +64,8 @@ class GenotypeConcordance(protected val args: GenotypeConcordanceArgs) extends A
       None
     val projection = None //Some(Projection(project))
 
-    val testGTs: RDD[Genotype] = sc.adamLoad(args.testGenotypesFile, predicate, projection)
-    val truthGTs: RDD[Genotype] = sc.adamLoad(args.truthGenotypesFile, predicate, projection)
+    val testGTs: RDD[Genotype] = sc.loadGenotypes(args.testGenotypesFile, predicate, projection)
+    val truthGTs: RDD[Genotype] = sc.loadGenotypes(args.truthGenotypesFile, predicate, projection)
 
     val tables = testGTs.concordanceWith(truthGTs)
 

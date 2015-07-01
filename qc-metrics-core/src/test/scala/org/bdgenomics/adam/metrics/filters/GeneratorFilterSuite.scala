@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bdgenomics.adam.metrics.filters
+package org.bdgenomics.qc.metrics.filters
 
 import org.bdgenomics.utils.metrics.{ Collection => BDGCollection }
 import org.scalatest._
