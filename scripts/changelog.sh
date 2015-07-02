@@ -15,7 +15,7 @@ else
   exit 1
 fi
 
-echo "# ADAM #"
+echo "# QC-METRICS #"
 
 git log | grep -E "Merge pull request|prepare release" | grep -vi "Revert" | uniq | while read l
 do 
