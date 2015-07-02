@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bdgenomics.qc-metrics</groupId>
   <artifactId>qc-metrics-parent_2.10</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>qc-metrics</name>
   <description>Read and Variant QC Metrics</description>
@@ -42,7 +42,7 @@
     <connection>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</connection>
     <developerConnection>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</developerConnection>
     <url>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</url>
-    <tag>qc-metrics-parent_2.10-0.0.1</tag>
+    <tag>master</tag>
   </scm>
   <developers>
     <developer>
