@@ -19,12 +19,12 @@ package org.bdgenomics.qc.cli
 
 import java.util.logging.Level._
 import org.apache.spark.Logging
-import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.util.ParquetLogger
+import org.bdgenomics.utils.cli._
 
 object QCMain extends Logging {
 
-  case class CommandGroup(name: String, commands: List[ADAMCommandCompanion])
+  case class CommandGroup(name: String, commands: List[BDGCommandCompanion])
 
   private val commandGroups =
     List(

@@ -18,21 +18,19 @@
 package org.bdgenomics.qc.cli
 
 import java.io.{ OutputStreamWriter, PrintWriter }
-
 import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.projections.AlignmentRecordField._
 import org.bdgenomics.adam.projections.FieldValue
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.qc.metrics.{ BucketComparisons, CombinedComparisons, DefaultComparisons }
 import org.bdgenomics.qc.rdd.read.comparisons.ComparisonTraversalEngine
+import org.bdgenomics.utils.cli._
 import org.bdgenomics.utils.metrics.aggregators.{ AggregatedCollection, CombinedAggregator, HistogramAggregator, Writable }
 import org.bdgenomics.utils.metrics.{ Collection, Histogram }
 import org.kohsuke.args4j.{ Argument, CmdLineParser, Option => Args4jOption }
-
 import scala.collection.Seq
 
 /**
@@ -55,12 +53,12 @@ import scala.collection.Seq
  * A subsequent tool like FindReads can be used to track down which reads give rise to particular aggregated
  * bins in the output histograms, if further diagnosis is needed.
  */
-object CompareADAM extends ADAMCommandCompanion with Serializable {
+object CompareADAM extends BDGCommandCompanion with Serializable {
 
   val commandName: String = "compare"
   val commandDescription: String = "Compare two ADAM files based on read name"
 
-  def apply(cmdLine: Array[String]): ADAMCommand = {
+  def apply(cmdLine: Array[String]): BDGCommand = {
     new CompareADAM(Args4j[CompareADAMArgs](cmdLine))
   }
 
@@ -128,9 +126,9 @@ class CompareADAMArgs extends Args4jBase with ParquetArgs with Serializable {
   val directory: String = null
 }
 
-class CompareADAM(protected val args: CompareADAMArgs) extends ADAMSparkCommand[CompareADAMArgs] with Serializable {
+class CompareADAM(protected val args: CompareADAMArgs) extends BDGSparkCommand[CompareADAMArgs] with Serializable {
 
-  val companion: ADAMCommandCompanion = CompareADAM
+  val companion: BDGCommandCompanion = CompareADAM
 
   /**
    * prints out a high-level summary of the compared files, including
@@ -174,7 +172,7 @@ class CompareADAM(protected val args: CompareADAMArgs) extends ADAMSparkCommand[
     }
   }
 
-  def run(sc: SparkContext, job: Job): Unit = {
+  def run(sc: SparkContext): Unit = {
 
     // Work around for -list_comparisons (doesn't require @Arguments)
     if (!args.listComparisons) {

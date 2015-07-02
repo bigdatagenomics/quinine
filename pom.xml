@@ -21,14 +21,12 @@
     <scala.version>2.10.4</scala.version>
     <scala.artifact.suffix>2.10</scala.artifact.suffix>
     <spark.version>1.2.0</spark.version>
-    <parquet.version>1.6.0rc4</parquet.version>
-    <avro.version>1.7.6</avro.version>
     <!-- Edit the following line to configure the Hadoop (HDFS) version. -->
     <hadoop.version>2.2.0</hadoop.version>
     <scoverage.version>0.99.2</scoverage.version>
 
-    <adam.version>0.16.1-SNAPSHOT</adam.version>
-    <utils.version>0.1.2</utils.version>
+    <adam.version>0.17.0</adam.version>
+    <utils.version>0.2.2</utils.version>
   </properties>
   
   <modules>
@@ -134,11 +132,11 @@
                 <rules>
                   <requireMavenVersion>
                     <version>[3.1.1,)</version>
-                    <message>BDG-UTILS requires Maven 3.1.1 or greater</message>
+                    <message>QC-METRICS requires Maven 3.1.1 or greater</message>
                   </requireMavenVersion>
                   <requireJavaVersion>
                     <version>[1.7,)</version>
-                    <message>BDG-UTILS requires Java 1.7 or greater</message>
+                    <message>QC-METRICS requires Java 1.7 or greater</message>
                   </requireJavaVersion>
                 </rules>
               </configuration>
@@ -312,27 +310,42 @@
       </dependency>
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
-        <artifactId>adam-core</artifactId>
+        <artifactId>adam-core_${scala.artifact.suffix}</artifactId>
         <version>${adam.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
-        <artifactId>adam-cli</artifactId>
+        <artifactId>adam-cli_${scala.artifact.suffix}</artifactId>
         <version>${adam.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
-        <artifactId>adam-core</artifactId>
+        <artifactId>adam-core_${scala.artifact.suffix}</artifactId>
         <version>${adam.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.bdgenomics.bdg-utils</groupId>
-        <artifactId>bdg-utils-misc</artifactId>
+        <groupId>org.bdgenomics.utils</groupId>
+        <artifactId>utils-misc_${scala.artifact.suffix}</artifactId>
+        <version>${utils.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bdgenomics.utils</groupId>
+        <artifactId>utils-misc_${scala.artifact.suffix}</artifactId>
         <version>${utils.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.bdgenomics.utils</groupId>
+        <artifactId>utils-cli_${scala.artifact.suffix}</artifactId>
+        <version>${utils.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bdgenomics.utils</groupId>
+        <artifactId>utils-metrics_${scala.artifact.suffix}</artifactId>
+        <version>${utils.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
@@ -383,31 +396,6 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.apache.avro</groupId>
-        <artifactId>avro</artifactId>
-        <version>${avro.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.twitter</groupId>
-        <artifactId>parquet-avro</artifactId>
-        <version>${parquet.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seqdoop</groupId>
-        <artifactId>hadoop-bam</artifactId>
-        <version>7.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seqdoop</groupId>
-        <artifactId>cofoja</artifactId>
-        <version>1.1-r150</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seqdoop</groupId>
-        <artifactId>htsjdk</artifactId>
-        <version>1.118</version>
-      </dependency>
-      <dependency>
         <groupId>args4j</groupId>
         <artifactId>args4j</artifactId>
         <version>2.0.23</version>
@@ -423,34 +411,6 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.7.5</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.fusesource.scalate</groupId>
-        <artifactId>scalate-core_2.10</artifactId>
-        <version>1.6.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.scalatra</groupId>
-        <artifactId>scalatra-json_2.10</artifactId>
-        <version>2.3.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.scalatra</groupId>
-        <artifactId>scalatra_2.10</artifactId>
-        <version>2.3.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>14.0.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>1.9.5</version>
-        <scope>test</scope>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 

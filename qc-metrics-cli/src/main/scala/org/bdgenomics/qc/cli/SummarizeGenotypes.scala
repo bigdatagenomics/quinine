@@ -24,13 +24,13 @@ import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{ Logging, SparkContext }
-import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.Genotype
 import org.bdgenomics.qc.rdd.variation.{ GenotypesSummary, GenotypesSummaryFormatting }
+import org.bdgenomics.utils.cli._
 import org.kohsuke.args4j
 
-object SummarizeGenotypes extends ADAMCommandCompanion {
+object SummarizeGenotypes extends BDGCommandCompanion {
 
   val commandName = "summarize_genotypes"
   val commandDescription = "Print statistics of genotypes and variants in an ADAM file"
@@ -51,10 +51,10 @@ class SummarizeGenotypesArgs extends Args4jBase with ParquetArgs {
   var out: String = ""
 }
 
-class SummarizeGenotypes(val args: SummarizeGenotypesArgs) extends ADAMSparkCommand[SummarizeGenotypesArgs] with Logging {
+class SummarizeGenotypes(val args: SummarizeGenotypesArgs) extends BDGSparkCommand[SummarizeGenotypesArgs] with Logging {
   val companion = SummarizeGenotypes
 
-  def run(sc: SparkContext, job: Job) {
+  def run(sc: SparkContext) {
     val adamGTs: RDD[Genotype] = sc.loadGenotypes(args.adamFile)
     val stats = GenotypesSummary(adamGTs)
     val result = args.format match {

@@ -24,10 +24,10 @@ import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
-import org.bdgenomics.adam.cli._
 import org.bdgenomics.adam.models.ReadBucket
 import org.bdgenomics.qc.metrics.filters.{ CombinedFilter, GeneratorFilter }
 import org.bdgenomics.qc.metrics.{ BucketComparisons, DefaultComparisons }
+import org.bdgenomics.utils.cli._
 import org.kohsuke.args4j.{ Argument, Option => Args4jOption }
 
 import scala.collection.Seq
@@ -46,11 +46,11 @@ import scala.collection.Seq
  * FindReads would then allow you to output the names of those 3% of the reads which are aligned differently,
  * using a filter expression like "positions!=0".
  */
-object FindReads extends ADAMCommandCompanion {
+object FindReads extends BDGCommandCompanion {
   val commandName: String = "findreads"
   val commandDescription: String = "Find reads that match particular individual or comparative criteria"
 
-  def apply(cmdLine: Array[String]): ADAMCommand = {
+  def apply(cmdLine: Array[String]): BDGCommand = {
     new FindReads(Args4j[FindReadsArgs](cmdLine))
   }
 
@@ -112,10 +112,10 @@ class FindReadsArgs extends Args4jBase with ParquetArgs with Serializable {
   val file: String = null
 }
 
-class FindReads(protected val args: FindReadsArgs) extends ADAMSparkCommand[FindReadsArgs] with Serializable {
-  val companion: ADAMCommandCompanion = FindReads
+class FindReads(protected val args: FindReadsArgs) extends BDGSparkCommand[FindReadsArgs] with Serializable {
+  val companion: BDGCommandCompanion = FindReads
 
-  def run(sc: SparkContext, job: Job): Unit = {
+  def run(sc: SparkContext): Unit = {
 
     val filter = FindReads.parseFilters(args.filter)
     val generator = filter.comparison

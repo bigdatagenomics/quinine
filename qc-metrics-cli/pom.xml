@@ -85,17 +85,17 @@
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-cli</artifactId>
+      <artifactId>adam-cli_${scala.artifact.suffix}</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-core</artifactId>
+      <artifactId>adam-core_${scala.artifact.suffix}</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.bdgenomics.bdg-utils</groupId>
-      <artifactId>bdg-utils-misc</artifactId>
+      <groupId>org.bdgenomics.utils</groupId>
+      <artifactId>utils-misc_${scala.artifact.suffix}</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -104,7 +104,24 @@
       <artifactId>scalatest_${scala.artifact.suffix}</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.bdgenomics.utils</groupId>
+      <artifactId>utils-cli_${scala.artifact.suffix}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bdgenomics.utils</groupId>
+      <artifactId>utils-metrics_${scala.artifact.suffix}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.artifact.suffix}</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>args4j</groupId>
+      <artifactId>args4j</artifactId>
+    </dependency>
   </dependencies>
+
   <profiles>
     <profile>
       <id>coverage</id>

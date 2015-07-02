@@ -21,16 +21,15 @@ import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{ Logging, SparkContext }
-import org.bdgenomics.adam.cli._
-import org.bdgenomics.adam.predicates.GenotypeRecordPASSPredicate
 import org.bdgenomics.adam.projections.GenotypeField
 import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.formats.avro.Genotype
 import org.bdgenomics.qc.rdd.QCContext._
 import org.bdgenomics.qc.rdd.variation.ConcordanceTable
+import org.bdgenomics.utils.cli._
 import org.kohsuke.args4j.{ Argument, Option => Args4jOption }
 
-object GenotypeConcordance extends ADAMCommandCompanion {
+object GenotypeConcordance extends BDGCommandCompanion {
   val commandName = "genotype_concordance"
   val commandDescription = "Pairwise comparison of sets of ADAM genotypes"
 
@@ -48,24 +47,24 @@ class GenotypeConcordanceArgs extends Args4jBase with ParquetArgs {
   var includeNonPass: Boolean = false
 }
 
-class GenotypeConcordance(protected val args: GenotypeConcordanceArgs) extends ADAMSparkCommand[GenotypeConcordanceArgs] with Logging {
-  val companion: ADAMCommandCompanion = GenotypeConcordance
+class GenotypeConcordance(protected val args: GenotypeConcordanceArgs) extends BDGSparkCommand[GenotypeConcordanceArgs] with Logging {
+  val companion: BDGCommandCompanion = GenotypeConcordance
 
-  def run(sc: SparkContext, job: Job): Unit = {
+  def run(sc: SparkContext): Unit = {
     // TODO: Figure out projections of nested fields
     var project = List(
       GenotypeField.variant, GenotypeField.sampleId, GenotypeField.alleles)
 
-    val predicate = if (!args.includeNonPass) {
-      // We also need to project the filter field to use this predicate
-      // project :+= varIsFiltered
-      Some(classOf[GenotypeRecordPASSPredicate])
-    } else
-      None
-    val projection = None //Some(Projection(project))
+    def filterOnPass(gt: Genotype): Boolean = {
+      Option(gt.getVariantCallingAnnotations).fold(false)(vca => {
+        Option(vca.getVariantIsPassing).fold(false)(v => v)
+      })
+    }
 
-    val testGTs: RDD[Genotype] = sc.loadGenotypes(args.testGenotypesFile, predicate, projection)
-    val truthGTs: RDD[Genotype] = sc.loadGenotypes(args.truthGenotypesFile, predicate, projection)
+    val testGTs: RDD[Genotype] = sc.loadGenotypes(args.testGenotypesFile)
+      .filter(filterOnPass)
+    val truthGTs: RDD[Genotype] = sc.loadGenotypes(args.truthGenotypesFile)
+      .filter(filterOnPass)
 
     val tables = testGTs.concordanceWith(truthGTs)
 
