@@ -193,7 +193,7 @@ class CompareADAM(protected val args: CompareADAMArgs) extends BDGSparkCommand[C
     }
 
     val generators: Seq[BucketComparisons[Any]] = CompareADAM.parseGenerators(args.comparisons)
-    val aggregators = (0 until generators.size).map(i => new HistogramAggregator[Any]())
+    val aggregators = generators.indices.map(i => new HistogramAggregator[Any]())
 
     val generator = new CombinedComparisons(generators)
     val aggregator = new CombinedAggregator(aggregators)
