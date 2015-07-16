@@ -25,7 +25,7 @@ import scala.collection.JavaConverters._
 
 object ConcordanceTable {
   def apply() = new ConcordanceTable()
-  def apply(p: (GenotypeType, GenotypeType)) = (new ConcordanceTable()).add(p)
+  def apply(p: (GenotypeType, GenotypeType)) = new ConcordanceTable().add(p)
 
   // Relevant sub-groups of concordance table entries
   val CALLED = EnumSet.of(GenotypeType.HOM_REF, GenotypeType.HET, GenotypeType.HOM_ALT)

@@ -57,7 +57,7 @@ object QCMain extends Logging {
 
   def main(args: Array[String]) {
     log.info("ADAM invoked with args: %s".format(argsToString(args)))
-    if (args.size < 1) {
+    if (args.length < 1) {
       printCommands()
     } else {
 
