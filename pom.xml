@@ -8,62 +8,55 @@
   </parent>
   
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.bdgenomics.qc-metrics</groupId>
-  <artifactId>qc-metrics-parent_2.10</artifactId>
+  <groupId>org.bdgenomics.kumquat</groupId>
+  <artifactId>kumquat-parent_2.10</artifactId>
   <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>qc-metrics</name>
+  <name>kumquat</name>
   <description>Read and Variant QC Metrics</description>
   <url>http://bdgenomics.org/</url>
 
   <properties>
-    <java.version>1.7</java.version>
-    <spark.version>1.4.1</spark.version>
+    <java.version>1.8</java.version>
+    <spark.version>1.6.1</spark.version>
     <!-- Edit the following line to configure the Hadoop (HDFS) version. -->
-    <hadoop.version>2.2.0</hadoop.version>
+    <hadoop.version>2.6.2</hadoop.version>
     <scoverage.version>1.1.1</scoverage.version>
-    <adam.version>0.18.2</adam.version>
-    <utils.version>0.2.3</utils.version>
+    <adam.version>0.19.0</adam.version>
+    <utils.version>0.2.4</utils.version>
   </properties>
   
   <modules>
-    <module>qc-metrics-core</module>
-    <module>qc-metrics-cli</module>
+    <module>kumquat-core</module>
+    <module>kumquat-cli</module>
   </modules>
   
   <licenses>
     <license>
       <name>Apache License</name>
-      <url>https://raw.github.com/bigdatagenomics/qc-metrics/master/LICENSE.txt</url>
+      <url>https://raw.github.com/bigdatagenomics/kumquat/master/LICENSE.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</connection>
-    <developerConnection>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</developerConnection>
-    <url>scm:git:git@github.com:bigdatagenomics/qc-metrics.git</url>
+    <connection>scm:git:git@github.com:bigdatagenomics/kumquat.git</connection>
+    <developerConnection>scm:git:git@github.com:bigdatagenomics/kumquat.git</developerConnection>
+    <url>scm:git:git@github.com:bigdatagenomics/kumquat.git</url>
     <tag>master</tag>
   </scm>
   <developers>
     <developer>
-      <id>massie</id>
-      <name>Matt Massie</name>
-      <email>massie@cs.berkeley.edu</email>
-      <url>http://www.cs.berkeley.edu/~massie</url>
-      <organization>U.C. Berkeley Computer Science</organization>
-      <organizationUrl>http://www.cs.berkeley.edu/</organizationUrl>
-    </developer>
-    <developer>
-      <id>tdanford</id>
-      <name>Timothy Danford</name>
-      <email>tdanford@gmail.com</email>
+      <id>fnothaft</id>
+      <name>Frank Austin Nothaft</name>
+      <email>fnothaft@berkeley.edu</email>
+      <url>http://fnothaft.io</url>
       <organization>U.C. Berkeley Computer Science</organization>
       <organizationUrl>http://www.cs.berkeley.edu/</organizationUrl>
     </developer>
   </developers>
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/bigdatagenomics/qc-metrics/issues</url>
+    <url>https://github.com/bigdatagenomics/kumquat/issues</url>
   </issueManagement>
 
   <build>
@@ -129,11 +122,11 @@
                 <rules>
                   <requireMavenVersion>
                     <version>[3.1.1,)</version>
-                    <message>QC-METRICS requires Maven 3.1.1 or greater</message>
+                    <message>KUMQUAT requires Maven 3.1.1 or greater</message>
                   </requireMavenVersion>
                   <requireJavaVersion>
                     <version>[1.7,)</version>
-                    <message>QC-METRICS requires Java 1.7 or greater</message>
+                    <message>KUMQUAT requires Java 1.7 or greater</message>
                   </requireJavaVersion>
                 </rules>
               </configuration>
@@ -205,6 +198,11 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>1.9.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.4.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -285,8 +283,8 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.bdgenomics.qc-metrics</groupId>
-        <artifactId>qc-metrics-core_2.10</artifactId>
+        <groupId>org.bdgenomics.kumquat</groupId>
+        <artifactId>kumquat-core_2.10</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
