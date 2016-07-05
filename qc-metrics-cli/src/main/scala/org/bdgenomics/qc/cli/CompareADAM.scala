@@ -80,7 +80,7 @@ object CompareADAM extends BDGCommandCompanion with Serializable {
       readMapped,
       primaryAlignment,
       readPaired,
-      firstOfPair) ++ generator.schemas
+      readInFragment) ++ generator.schemas
 
     new ComparisonTraversalEngine(schemas, sc.findFiles(new Path(input1Path), recurse1), sc.findFiles(new Path(input2Path), recurse2))(sc)
   }

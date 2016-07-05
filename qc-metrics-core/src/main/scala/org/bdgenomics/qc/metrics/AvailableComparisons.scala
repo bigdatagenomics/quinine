@@ -118,7 +118,7 @@ object MappedPosition extends LongComparisons with Serializable {
 
   def schemas: Seq[FieldValue] = Seq(
     start,
-    firstOfPair)
+    readInFragment)
 }
 
 object MapQualityScores extends PointComparisons with Serializable {
