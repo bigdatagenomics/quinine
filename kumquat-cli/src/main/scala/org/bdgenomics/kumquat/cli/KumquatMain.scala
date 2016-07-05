@@ -40,12 +40,8 @@ object KumquatMain extends Logging {
 
   private def printCommands() {
     println("\n")
-    println("""     e            888~-_              e                 e    e
-               |    d8b           888   \            d8b               d8b  d8b
-               |   /Y88b          888    |          /Y88b             d888bdY88b
-               |  /  Y88b         888    |         /  Y88b           / Y88Y Y888b
-               | /____Y88b        888   /         /____Y88b         /   YY   Y888b
-               |/      Y88b       888_-~         /      Y88b       /          Y888b""".stripMargin('|'))
+    println("kumQUAt: A suite of QUAlity control tools.")
+    println("\n")
     println("\nChoose one of the following commands:")
     commandGroups.foreach { grp =>
       println("\n%s".format(grp.name))
