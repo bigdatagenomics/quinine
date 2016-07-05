@@ -33,6 +33,41 @@ import scala.annotation.tailrec
 case class CoverageStats(median: Double,
                          mean: Double,
                          distribution: Map[Int, Int]) {
+
+  /**
+   * The total number of sites, as a double.
+   */
+  private val sites = distribution.values
+    .sum
+    .toDouble
+
+  /**
+   * Returns the number of sites with coverage higher than a threshold.
+   *
+   * @param threshold The coverage threshold.
+   * @return Returns the number of sites that are covered by more observations
+   *   than this threshold value.
+   *
+   * @see percentSitesCoveredAt
+   */
+  def sitesCoveredAt(threshold: Int): Int = {
+    distribution.filter(kv => kv._1 >= threshold)
+      .values
+      .sum
+  }
+
+  /**
+   * Returns the percentage of sites with coverage higher than a threshold.
+   *
+   * @param threshold The coverage threshold.
+   * @return Returns the percentage of sites that are covered by more observations
+   *   than this threshold value.
+   *
+   * @see sitesCoveredAt
+   */
+  def percentSitesCoveredAt(threshold: Int): Double = {
+    100.0 * sitesCoveredAt(threshold).toDouble / sites
+  }
 }
 
 /**

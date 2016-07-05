@@ -61,4 +61,34 @@ class CoverageStatsSuite extends ADAMFunSuite {
 
     assert(mean > 0.49999 && mean < 0.50001)
   }
+
+  val cs = {
+    val obs = Map((0 -> 1), (1 -> 1), (2 -> 3))
+
+    CoverageStats(2.0, 7.0 / 5.0, obs)
+  }
+
+  test("covered at 0 should return all sites") {
+    val sites = cs.sitesCoveredAt(0)
+    val percentSites = cs.percentSitesCoveredAt(0)
+
+    assert(sites === 5)
+    assert(percentSites > 99.999 && percentSites < 100.001)
+  }
+
+  test("covered at 2 should return fewer sites") {
+    val sites = cs.sitesCoveredAt(2)
+    val percentSites = cs.percentSitesCoveredAt(2)
+
+    assert(sites === 3)
+    assert(percentSites > 59.999 && percentSites < 60.001)
+  }
+
+  test("covered at 5 should return no sites") {
+    val sites = cs.sitesCoveredAt(5)
+    val percentSites = cs.percentSitesCoveredAt(5)
+
+    assert(sites === 0)
+    assert(percentSites === 0.0)
+  }
 }

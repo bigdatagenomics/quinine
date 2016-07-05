@@ -17,8 +17,6 @@
  */
 package org.bdgenomics.quinine.cli
 
-import java.io.OutputStream
-import org.apache.hadoop.fs.{ FileSystem, Path }
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
 import org.bdgenomics.adam.models.ReferenceRegion
@@ -112,24 +110,7 @@ class Coverage(protected val args: CoverageArgs) extends BDGSparkCommand[Coverag
     // compute the final stats
     val coverageStats = CoverageStats(coverageCounts)
 
-    // if desired, write the coverage stats to a file
-    if (args.statPath != null) {
-
-      // get the underlying file system
-      val fs = FileSystem.get(sc.hadoopConfiguration)
-
-      // get a stream to write to a file
-      val os = fs.create(new Path(args.statPath))
-        .asInstanceOf[OutputStream]
-
-      // write the stats
-      os.write(coverageStats.toString.getBytes)
-
-      // close the output stream
-      os.flush()
-      os.close()
-    } else {
-      println(coverageStats)
-    }
+    // write out the stats
+    StatWriter(coverageStats, args.statPath, sc)
   }
 }
