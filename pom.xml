@@ -8,11 +8,11 @@
   </parent>
   
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.bdgenomics.kumquat</groupId>
-  <artifactId>kumquat-parent_2.10</artifactId>
+  <groupId>org.bdgenomics.quinine</groupId>
+  <artifactId>quinine-parent_2.10</artifactId>
   <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>kumquat</name>
+  <name>quinine</name>
   <description>Read and Variant QC Metrics</description>
   <url>http://bdgenomics.org/</url>
 
@@ -27,21 +27,21 @@
   </properties>
   
   <modules>
-    <module>kumquat-core</module>
-    <module>kumquat-cli</module>
+    <module>quinine-core</module>
+    <module>quinine-cli</module>
   </modules>
   
   <licenses>
     <license>
       <name>Apache License</name>
-      <url>https://raw.github.com/bigdatagenomics/kumquat/master/LICENSE.txt</url>
+      <url>https://raw.github.com/bigdatagenomics/quinine/master/LICENSE.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git@github.com:bigdatagenomics/kumquat.git</connection>
-    <developerConnection>scm:git:git@github.com:bigdatagenomics/kumquat.git</developerConnection>
-    <url>scm:git:git@github.com:bigdatagenomics/kumquat.git</url>
+    <connection>scm:git:git@github.com:bigdatagenomics/quinine.git</connection>
+    <developerConnection>scm:git:git@github.com:bigdatagenomics/quinine.git</developerConnection>
+    <url>scm:git:git@github.com:bigdatagenomics/quinine.git</url>
     <tag>master</tag>
   </scm>
   <developers>
@@ -56,7 +56,7 @@
   </developers>
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/bigdatagenomics/kumquat/issues</url>
+    <url>https://github.com/bigdatagenomics/quinine/issues</url>
   </issueManagement>
 
   <build>
@@ -122,11 +122,11 @@
                 <rules>
                   <requireMavenVersion>
                     <version>[3.1.1,)</version>
-                    <message>KUMQUAT requires Maven 3.1.1 or greater</message>
+                    <message>QUININE requires Maven 3.1.1 or greater</message>
                   </requireMavenVersion>
                   <requireJavaVersion>
                     <version>[1.7,)</version>
-                    <message>KUMQUAT requires Java 1.7 or greater</message>
+                    <message>QUININE requires Java 1.7 or greater</message>
                   </requireJavaVersion>
                 </rules>
               </configuration>
@@ -283,8 +283,8 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.bdgenomics.kumquat</groupId>
-        <artifactId>kumquat-core_2.10</artifactId>
+        <groupId>org.bdgenomics.quinine</groupId>
+        <artifactId>quinine-core_2.10</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

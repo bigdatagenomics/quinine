@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#
+# Licensed to Big Data Genomics (BDG) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The BDG licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# usage: quinine-submit [<spark-args> --] <quinine-args>
+
+set -e
+
+# Split args into Spark and QUININE args
+DD=False  # DD is "double dash"
+PRE_DD=()
+POST_DD=()
+for ARG in "$@"; do
+  shift
+  if [[ $ARG == "--" ]]; then
+    DD=True
+    POST_DD=( "$@" )
+    break
+  fi
+  PRE_DD+=("$ARG")
+done
+
+if [[ $DD == True ]]; then
+  SPARK_ARGS=("${PRE_DD[@]}")
+  QUININE_ARGS=("${POST_DD[@]}")
+else
+  SPARK_ARGS=()
+  QUININE_ARGS=("${PRE_DD[@]}")
+fi
+
+# Figure out where QUININE is installed
+SCRIPT_DIR="$(cd `dirname $0`/..; pwd)"
+
+# Find QUININE cli assembly jar
+QUININE_CLI_JAR=
+if [ -d "$SCRIPT_DIR/repo" ]; then
+  ASSEMBLY_DIR="$SCRIPT_DIR/repo"
+else
+  ASSEMBLY_DIR="$SCRIPT_DIR/quinine-cli/target"
+fi
+
+num_jars="$(ls -1 "$ASSEMBLY_DIR" | grep "^quinine-cli_[0-9A-Za-z\.-]*\.jar$" | grep -v javadoc | wc -l)"
+if [ "$num_jars" -eq "0" ]; then
+  echo "Failed to find QUININE cli assembly in $ASSEMBLY_DIR." 1>&2
+  echo "You need to build QUININE before running this program." 1>&2
+  exit 1
+fi
+
+ASSEMBLY_JARS="$(ls -1 "$ASSEMBLY_DIR" | grep "^quinine-cli_[0-9A-Za-z\.-]*\.jar$" | grep -v javadoc || true)"
+if [ "$num_jars" -gt "1" ]; then
+  echo "Found multiple QUININE cli assembly jars in $ASSEMBLY_DIR:" 1>&2
+  echo "$ASSEMBLY_JARS" 1>&2
+  echo "Please remove all but one jar." 1>&2
+  exit 1
+fi
+
+QUININE_CLI_JAR="${ASSEMBLY_DIR}/${ASSEMBLY_JARS}"
+
+# Allow main class to be overridden
+if [ -z "$QUININE_MAIN" ]; then
+  QUININE_MAIN="org.bdgenomics.quinine.cli.QuinineMain"
+fi
+echo "Using QUININE_MAIN=$QUININE_MAIN"
+
+# Find spark-submit script
+if [ -z "$SPARK_HOME" ]; then
+  SPARK_SUBMIT=$(which spark-submit || echo)
+else
+  SPARK_SUBMIT="$SPARK_HOME"/bin/spark-submit
+fi
+if [ -z "$SPARK_SUBMIT" ]; then
+  echo "SPARK_HOME not set and spark-submit not on PATH; Aborting."
+  exit 1
+fi
+echo "Using SPARK_SUBMIT=$SPARK_SUBMIT"
+
+# submit the job to Spark
+"$SPARK_SUBMIT" \
+  --class $QUININE_MAIN \
+  --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
+  --conf spark.kryo.registrator=org.bdgenomics.adam.serialization.ADAMKryoRegistrator \
+  "${SPARK_ARGS[@]}" \
+  "$QUININE_CLI_JAR" \
+  "${QUININE_ARGS[@]}"
