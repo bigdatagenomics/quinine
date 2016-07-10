@@ -41,7 +41,7 @@ object QuinineMain extends Logging {
 
   private def printCommands() {
     println("\n")
-    println("kumQUAt: A suite of QUAlity control tools.")
+    println("quinine: A refreshing treatment for all quality control ailments")
     println("\n")
     println("\nChoose one of the following commands:")
     commandGroups.foreach { grp =>
