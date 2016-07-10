@@ -21,7 +21,38 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
 import org.bdgenomics.adam.models.ReferenceRegion
 import org.bdgenomics.adam.rdd.BroadcastRegionJoin
-import org.bdgenomics.formats.avro.{ Variant, AlignmentRecord }
+import org.bdgenomics.formats.avro.{
+  AlignmentRecord,
+  DatabaseVariantAnnotation,
+  Genotype
+}
+
+object ContaminationEstimator {
+
+  /**
+   * Estimates inter-sample contamination given reads, prior genotypes, and
+   * frequency information.
+   *
+   * @param reads NGS reads from a sample, to analyze for contamination.
+   * @param genotypes Data from a prior genotyping study.
+   * @param annotations Allele frequency annotations.
+   * @return Returns the estimated contamination.
+   */
+  def estimateContamination(
+    reads: RDD[AlignmentRecord],
+    genotypes: RDD[Genotype],
+    annotations: RDD[DatabaseVariantAnnotation]): ContaminationEstimate = {
+
+    // get rdd of variant sites
+    val variantSites = VariantSite(genotypes, annotations)
+
+    // create estimator
+    val estimator = ContaminationEstimator(reads, variantSites)
+
+    // run the estimation process and return
+    estimator.estimateContamination()
+  }
+}
 
 /**
  * Estimates the cross-individual contamination in next-generating sequencing data,
@@ -30,10 +61,8 @@ import org.bdgenomics.formats.avro.{ Variant, AlignmentRecord }
  * @param reads The set of reads used to estimate the contamination
  * @param variants A baseline set of variants (and their sites in the genome)
  */
-class ContaminationEstimator(val reads: RDD[AlignmentRecord],
-                             val variants: RDD[VariantSite]) {
-
-  import ContaminationEstimator._
+private[contamination] case class ContaminationEstimator(val reads: RDD[AlignmentRecord],
+                                                         val variants: RDD[VariantSite]) {
 
   /**
    * This is the main entry-point to the code -- it estimates a contamination parameter 'c'
@@ -41,149 +70,38 @@ class ContaminationEstimator(val reads: RDD[AlignmentRecord],
    *
    * @return The 'c' which maximizes the likelihood in the grid of possible values.
    */
-  def estimateContamination(): Double = {
-    val grid: Array[Double] = (0 until 100).map(i => 1.0 * i / 100.0).toArray
-    val lls: Array[Double] = grid.map(logLikelihood)
+  def estimateContamination(): ContaminationEstimate = {
+    val observations = BroadcastRegionJoin.partitionAndJoin(variants.keyBy(_.getRegion),
+      reads.keyBy(ReferenceRegion(_)))
+      .flatMap(kv => {
+        val (variantSite, read) = kv
+        variantSite.toObservation(read)
+      }).cache()
 
-    grid.zip(lls).maxBy(_._2)._1
+    // build the grid to search over
+    val grid = ((1 until 10).map(i => 0.001 * i) ++
+      (1 until 10).map(i => 0.01 * i) ++
+      (1 until 10).map(i => 0.1 * i))
+
+    // loop over the grid and get the complete log likelihoods
+    val lls = grid.map(logLikelihood(observations, _))
+
+    // return an estimate instance
+    ContaminationEstimate(grid, lls)
   }
 
   /**
-   * Calculates the log-likelihood of a particular contamination level, c, given the set of reads
+   * Calculates the log-likelihood of a particular contamination level, given the set of reads
    * and the set of variant sites.
    *
-   * @param c The contamination level over which to calculate the log-likelihood
+   * @param observations An RDD containing variant sites observations against reads.
+   * @param contamination The contamination level over which to calculate the log-likelihood
    * @return The log-likelihood
    */
-  def logLikelihood(c: Double): Double = {
-    val joined: RDD[(VariantSite, AlignmentRecord)] =
-      BroadcastRegionJoin.partitionAndJoin(variants.keyBy(ContaminationEstimator.variantRegion), reads.keyBy(ReferenceRegion(_)))
+  def logLikelihood(observations: RDD[Observation],
+                    contamination: Double): Double = {
 
-    val readlikelihoods: RDD[(VariantSite, Double)] = joined.map(carry(calculateLogLikelihood(c)))
-    val siteLikelihoods: RDD[(VariantSite, Double)] = readlikelihoods.reduceByKey(_ + _)
-
-    siteLikelihoods.map(_._2).reduce(_ + _)
-  }
-
-  def calculateLogLikelihood(c: Double)(vs: VariantSite, read: AlignmentRecord): Double =
-    vs.logLikelihood(c, read)
-
-}
-
-object ContaminationEstimator extends Serializable {
-
-  /**
-   * A specialized higher-order helper function -- this function, carry, takes a function
-   * on pairs and produces a second function, on pairs, which produces a pair of the _first_
-   * argument and the return value of the original (input) function.
-   *
-   * So if 'f' is a function such that f(1, 3) = 4, then carry(f)(1, 3) = (1, 4)
-   *
-   * @param f The binary function
-   * @tparam U The type of the first argument to f
-   * @tparam T The type of the second arguemnet to f
-   * @tparam V The return type of f
-   * @return a pair with type (U, V), whose first value is the first value of the input pair and
-   *         whose second value is the result f(U, V) of calling the function on the input pair.
-   */
-  def carry[U, T, V](f: (U, T) => V): ((U, T)) => (U, V) = {
-    def carried(p: (U, T)): (U, V) = {
-      p match {
-        case (u: U, _) => (u, f(p._1, p._2))
-      }
-    }
-    carried
-  }
-
-  /**
-   * Helper higher-order function, transforms a function into a function from pairs to
-   * pairs, carrying through the original argument.
-   *
-   * So, if 'f' is a function such that f(1) = 10, then lift(f)(1) = (1, 10)
-   *
-   * In other words, the argument is carried through with the "original" result as a pair.
-   *
-   * @param f
-   * @tparam U
-   * @tparam T
-   * @tparam V
-   * @return
-   */
-  def lift[U, T, V](f: T => V): ((U, T)) => (U, V) = {
-    def lifted(p: (U, T)): (U, V) = {
-      p match {
-        case (u: U, t: T) =>
-          (u, f(t))
-      }
-    }
-    lifted
-  }
-
-  def phredToError(phred: Char): Double = {
-    val phredValue: Int = phred - '!'
-    Math.exp(-10.0 * phredValue)
-  }
-
-  def readRegion(read: AlignmentRecord): ReferenceRegion = ReferenceRegion(read)
-  def variantRegion(vs: VariantSite): ReferenceRegion =
-    ReferenceRegion(vs.variant.getContig.getContigName, vs.variant.getStart, vs.variant.getEnd)
-}
-
-/**
- * In the ContEST paper, the variable 'i' indexes the sites of know variation, where
- * A_i is the reference allele (and \bar{A}_i the non-reference allele) at that site, and
- * f_i is the alternative (contaminating) population frequency of the variant.
- *
- * This class, VariantSite, encapsulates both the A_i and the f_i for a particular
- * variant site i.
- *
- * @param variant The variant with-respect-to-which we are calculating the likelihood of any read.
- * @param populationAlternateFrequency a frequency, specific to this Variant
- */
-case class VariantSite(variant: Variant, populationAlternateFrequency: Double) extends Serializable {
-
-  /**
-   * Core likelihood function.
-   *
-   * The likelihood of a read, given the contamination estimate c.
-   *
-   * This is basically the third (unnumbered) equation from the first page of the ContEST paper.
-   *
-   * This code is adapted from the VariantSite.readLikelihood method in the jcontext package.
-   *
-   * @param c The contaminating fraction which is the primary parameter in the likelihood
-   * @param read The read whose likelihood we are assessing.
-   * @return The likelihood of the read given the contaminating fraction.
-   */
-  def logLikelihood(c: Double, read: AlignmentRecord): Double = {
-    val offset: Int = (variant.getStart - read.getStart).toInt
-    val readBase: String = read.getSequence.substring(offset, offset + 1)
-    val error: Double = ContaminationEstimator.phredToError(read.getQual.charAt(offset))
-    val notError = 1.0 - error
-    val error3 = error / 3.0
-    val f: Double = populationAlternateFrequency // f_i, but the i is implicit in this class
-
-    if (readBase.equals(variant.getReferenceAllele)) {
-      /*
-      "if b_{ij} = A_i"
-       */
-      val not_c: Double = (1.0 - c) * notError
-      val _c: Double = c * (f * notError + (1.0 - f) * error3)
-      not_c + _c
-
-    } else if (readBase.equals(variant.getAlternateAllele)) {
-      /*
-      "if b_{ij} = \bar{A}_i"
-       */
-      val not_c: Double = (1.0 - c) * error3
-      val _c: Double = c * (f * error3 + (1.0 - f) * notError)
-      not_c + _c
-
-    } else {
-      /*
-      "otherwise"
-       */
-      error3
-    }
+    observations.map(_.logLikelihood(contamination))
+      .reduce(_ + _)
   }
 }

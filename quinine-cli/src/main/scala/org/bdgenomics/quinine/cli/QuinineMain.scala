@@ -31,11 +31,12 @@ object QuinineMain extends Logging {
       CommandGroup(
         "ReadQC",
         List(
-          FindReads,
           CompareADAM,
+          EstimateContamination,
+          FindReads,
           PanelMetrics)),
       CommandGroup(
-        "PRINT",
+        "VariantQC",
         List(
           SummarizeGenotypes)))
 
