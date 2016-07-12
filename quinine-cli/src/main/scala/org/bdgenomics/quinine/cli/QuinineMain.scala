@@ -29,10 +29,11 @@ object QuinineMain extends Logging {
   private val commandGroups =
     List(
       CommandGroup(
-        "QC",
+        "ReadQC",
         List(
           FindReads,
-          CompareADAM)),
+          CompareADAM,
+          PanelMetrics)),
       CommandGroup(
         "PRINT",
         List(
