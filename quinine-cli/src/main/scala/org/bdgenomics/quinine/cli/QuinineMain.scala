@@ -38,6 +38,7 @@ object QuinineMain extends Logging {
       CommandGroup(
         "VariantQC",
         List(
+          ComputeAlleleFrequency,
           SummarizeGenotypes)))
 
   private def printCommands() {
