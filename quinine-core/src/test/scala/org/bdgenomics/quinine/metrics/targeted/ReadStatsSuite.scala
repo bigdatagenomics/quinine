@@ -58,6 +58,11 @@ class ReadStatsSuite extends ADAMFunSuite {
     .setMapq(65)
     .build()
 
+  // similar to the perfect read, but has no qual
+  val noQualRead = AlignmentRecord.newBuilder(perfectRead)
+    .setQual(null)
+    .build()
+
   // similar to the perfect read, but failed the vendor quality checks
   val failedVendorChecksRead = AlignmentRecord.newBuilder(perfectRead)
     .setFailedVendorQualityChecks(true)
@@ -158,6 +163,12 @@ class ReadStatsSuite extends ADAMFunSuite {
 
   test("perfect read") {
     val rs = stat(perfectRead)
+
+    genericAsserts(rs)
+  }
+
+  test("noQualRead should be equivalent to the perfect read, and should not NPE") {
+    val rs = stat(noQualRead)
 
     genericAsserts(rs)
   }
