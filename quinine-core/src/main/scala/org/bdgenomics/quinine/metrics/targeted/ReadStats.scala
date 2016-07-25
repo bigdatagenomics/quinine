@@ -200,8 +200,7 @@ private[targeted] object ReadStats extends Serializable {
 
     // how many bases have low quality? convert base qual to ascii first
     val asciiBaseQual = (baseQualThreshold + 33).toChar
-    val lowQualityBases = read.getQual
-      .count(_ < asciiBaseQual)
+    val lowQualityBases = Option(read.getQual).fold(0)(seq => seq.count(_ < asciiBaseQual))
 
     // is this read in a read pair with overlapping inserts?
     // we only care if we are not the first read from the fragment!
