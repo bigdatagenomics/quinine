@@ -99,57 +99,61 @@ object CoverageStats extends Serializable {
    */
   private[coverage] def takeMedian(distribution: Seq[(Int, Int)]): Double = {
 
-    // sum the weights to get the total number of occurrences
-    // divide this in half, and you have the median point
-    val medianCount = (distribution.map(_._2).sum + 1).toDouble / 2.0
+    if (distribution.isEmpty) {
+      0.0
+    } else {
+      // sum the weights to get the total number of occurrences
+      // divide this in half, and you have the median point
+      val medianCount = (distribution.map(_._2).sum + 1).toDouble / 2.0
 
-    @tailrec def recurse(iter: Iterator[(Int, Int)],
-                         observed: Int,
-                         lastIdx: Int,
-                         optLower: Option[Int]): Double = {
+      @tailrec def recurse(iter: Iterator[(Int, Int)],
+                           observed: Int,
+                           lastIdx: Int,
+                           optLower: Option[Int]): Double = {
 
-      // if this triggers, something has gone terribly wrong
-      // we should stop midway through the iterator
-      // so, assume it passes, and pop the head
-      assert(iter.hasNext)
-      val (idx, count) = iter.next
+        // if this triggers, something has gone terribly wrong
+        // we should stop midway through the iterator
+        // so, assume it passes, and pop the head
+        assert(iter.hasNext, "Hit bad median at %d,%d in %s.".format(observed, lastIdx, distribution.mkString(",")))
+        val (idx, count) = iter.next
 
-      // we require that the list is sorted,
-      // and thus that indices increase monotonically
-      assert(idx > lastIdx)
+        // we require that the list is sorted,
+        // and thus that indices increase monotonically
+        assert(idx > lastIdx)
 
-      // where are we?
-      if ((observed + 1).toDouble > medianCount) {
+        // where are we?
+        if ((observed + 1).toDouble > medianCount) {
 
-        // are we moving beyond the median?
-        // if so, we should've seen that this was about to happen in the last step
-        assert(optLower.isDefined)
+          // are we moving beyond the median?
+          // if so, we should've seen that this was about to happen in the last step
+          assert(optLower.isDefined)
 
-        // if this happens, take the arithmetic mean of this and the last index
-        (optLower.get + idx).toDouble / 2.0
-      } else if (observed.toDouble <= medianCount && (observed + count).toDouble >= medianCount) {
+          // if this happens, take the arithmetic mean of this and the last index
+          (optLower.get + idx).toDouble / 2.0
+        } else if (observed.toDouble <= medianCount && (observed + count).toDouble >= medianCount) {
 
-        // are we centered around the median?
-        // if so, return our current index
-        idx.toDouble
-      } else {
-
-        // haven't hit the median yet! but,
-        // is the median between us and the next step?
-        val nextOptLower = if ((observed + count).toDouble < medianCount &&
-          (observed + count + 1).toDouble > medianCount) {
-          Some(idx)
+          // are we centered around the median?
+          // if so, return our current index
+          idx.toDouble
         } else {
-          None
+
+          // haven't hit the median yet! but,
+          // is the median between us and the next step?
+          val nextOptLower = if ((observed + count).toDouble < medianCount &&
+            (observed + count + 1).toDouble > medianCount) {
+            Some(idx)
+          } else {
+            None
+          }
+
+          // recurse!
+          recurse(iter, observed + count, idx, nextOptLower)
         }
-
-        // recurse!
-        recurse(iter, observed + count, idx, nextOptLower)
       }
-    }
 
-    // compute the median
-    recurse(distribution.toIterator, 0, -1, None)
+      // compute the median
+      recurse(distribution.toIterator, 0, -1, None)
+    }
   }
 
   /**
