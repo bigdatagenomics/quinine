@@ -63,7 +63,7 @@ case class ContaminationEstimate(testedContaminations: Seq[Double],
   def confidenceWindow(): (Double, Double) = {
 
     // likelihoods above this value are within the 95% confidence window
-    val confidenceLikelihood = mapContaminationEstimate() + log95
+    val confidenceLikelihood = obs.map(_._2).max + log95
 
     // so run a filter to get those points
     val confidentPoints = obs.filter(_._2 >= confidenceLikelihood)
@@ -80,11 +80,11 @@ case class ContaminationEstimate(testedContaminations: Seq[Double],
     val (low, high) = confidenceWindow()
 
     ("Maximum a posteriori contamination estimate: %f\n".format(mapContaminationEstimate) +
-      "95% confidence window: [%2.1f,%2.1f]\n\n".format(low, high) +
+      "95%% confidence window: [%2.1f,%2.1f]\n\n".format(low, high) +
       "Tested contaminations and complete likelihoods:\n" +
       "CONTAM\tLOG L\n" +
       testedContaminations.zip(completeLogLikelihoods)
-      .map(p => "%2.1f\t%0.3f".format(p._1, p._2))
+      .map(p => "%2.1f\t%1.3f".format(p._1, p._2))
       .mkString("\n"))
   }
 }
