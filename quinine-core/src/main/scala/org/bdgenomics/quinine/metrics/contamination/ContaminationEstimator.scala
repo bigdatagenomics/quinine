@@ -71,6 +71,7 @@ private[contamination] case class ContaminationEstimator(val reads: RDD[Alignmen
    * @return The 'c' which maximizes the likelihood in the grid of possible values.
    */
   def estimateContamination(): ContaminationEstimate = {
+
     val observations = BroadcastRegionJoin.partitionAndJoin(variants.keyBy(_.getRegion),
       reads.keyBy(ReferenceRegion(_)))
       .flatMap(kv => {
