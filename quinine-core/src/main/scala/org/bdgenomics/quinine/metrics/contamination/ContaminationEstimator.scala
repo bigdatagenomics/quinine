@@ -73,7 +73,8 @@ private[contamination] case class ContaminationEstimator(val reads: RDD[Alignmen
   def estimateContamination(): ContaminationEstimate = {
 
     val observations = BroadcastRegionJoin.partitionAndJoin(variants.keyBy(_.getRegion),
-      reads.keyBy(ReferenceRegion(_)))
+      reads.filter(_.getReadMapped)
+        .keyBy(ReferenceRegion(_)))
       .flatMap(kv => {
         val (variantSite, read) = kv
         variantSite.toObservation(read)

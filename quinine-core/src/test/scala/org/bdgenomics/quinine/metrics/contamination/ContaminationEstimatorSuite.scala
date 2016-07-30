@@ -37,6 +37,7 @@ class ContaminationEstimatorSuite extends ADAMFunSuite {
       .setContig(contig)
       .setStart(100L)
       .setEnd(101L)
+      .setReadMapped(true)
       .setSequence(allele.toString)
       .setQual("5") // phred 20 --> p = 0.99
       .build()
@@ -76,6 +77,31 @@ class ContaminationEstimatorSuite extends ADAMFunSuite {
     val reads = ((0 until 95).map(i => buildRead('A')) ++
       (0 until 5).map(i => buildRead('G')) ++
       (0 until 25).map(i => buildRead('T')))
+    val readRdd = sc.parallelize(reads)
+
+    val ce = ContaminationEstimator(readRdd, variantRdd)
+    val c = ce.estimateContamination()
+      .mapContaminationEstimate()
+
+    assert(c > 0.0499 && c < 0.0501)
+  }
+
+  sparkTest("estimate contamination from a read dataset with 5% contamination reads and misc other reads including unmapped") {
+    val contaminationVariant = VariantSite(Variant.newBuilder()
+      .setContig(contig)
+      .setStart(100L)
+      .setEnd(101L)
+      .setReferenceAllele("A")
+      .setAlternateAllele("G")
+      .build(), 0.0)
+    val variantRdd = sc.parallelize(Seq(contaminationVariant))
+
+    val reads = ((0 until 95).map(i => buildRead('A')) ++
+      (0 until 5).map(i => buildRead('G')) ++
+      (0 until 25).map(i => buildRead('T')) ++
+      (0 until 100).map(i => AlignmentRecord.newBuilder()
+        .setReadMapped(false)
+        .build()))
     val readRdd = sc.parallelize(reads)
 
     val ce = ContaminationEstimator(readRdd, variantRdd)
