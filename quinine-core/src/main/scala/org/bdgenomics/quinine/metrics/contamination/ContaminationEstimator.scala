@@ -80,6 +80,14 @@ private[contamination] case class ContaminationEstimator(val reads: RDD[Alignmen
         variantSite.toObservation(read)
       }).cache()
 
+    // count the number of observations and throw an exception if empty
+    // this will also force the rdd into the cache
+    require(observations.count > 0, "%s\n%s\n%s\n%s".format(
+      "Didn't observe any variants that overlapped with reads. Possible causes:",
+      "1. No HomAlt sites in input VCF,",
+      "2. Reads and variants are on different reference builds,",
+      "3. No HomAlt sites had allele frequency annotations."))
+
     // build the grid to search over
     val grid = ((1 until 10).map(i => 0.001 * i) ++
       (1 until 10).map(i => 0.01 * i) ++

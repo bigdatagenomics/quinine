@@ -111,6 +111,25 @@ class ContaminationEstimatorSuite extends ADAMFunSuite {
     assert(c > 0.0499 && c < 0.0501)
   }
 
+  sparkTest("estimating contamination with no reads should throw an IAE") {
+    val contaminationVariant = VariantSite(Variant.newBuilder()
+      .setContig(contig)
+      .setStart(100L)
+      .setEnd(101L)
+      .setReferenceAllele("A")
+      .setAlternateAllele("G")
+      .build(), 0.0)
+    val variantRdd = sc.parallelize(Seq(contaminationVariant))
+
+    val readRdd = sc.parallelize(Seq.empty[AlignmentRecord])
+
+    val ce = ContaminationEstimator(readRdd, variantRdd)
+    intercept[IllegalArgumentException] {
+      val c = ce.estimateContamination()
+        .mapContaminationEstimate()
+    }
+  }
+
   def fpLogCompare(a: Double, b: Double, tol: Double = 1e-3): Boolean = {
     val logB = log(b)
     abs(a - logB) <= tol
