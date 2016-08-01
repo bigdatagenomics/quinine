@@ -1,0 +1,7 @@
+##fileformat=VCFv4.1
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency, for each ALT allele, in the same order as listed">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+chr1	115256669	rs969273	G	A	.	PASS	AC=1958;AF=0.873;AN=2244
+chr2	212587321	rs13002712	G	A	.	PASS	AC=2044;AF=0.732;AN=2794
+chr3	2134	.	G	A,C	.	PASS	AF=0.5,0.25
+chr4	1234	.	G	A	.	PASS	AN=2795
