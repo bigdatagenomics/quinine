@@ -1,15 +1,15 @@
 # QC-METRICS #
 
 ### Version 0.0.2 ###
-* ISSUE [36](https://github.com/bigdatagenomics/adam/pull/36): Adding reads to rods transformation.
-* ISSUE [21](https://github.com/bigdatagenomics/adam/pull/21): Adding rod functionality: a specialized grouping of pileup data.
-* ISSUE [19](https://github.com/bigdatagenomics/adam/pull/19): Allow the Hadoop version to be specified
-* ISSUE [18](https://github.com/bigdatagenomics/adam/pull/18): "Flat" Representation of Genotype/Variants
-* ISSUE [13](https://github.com/bigdatagenomics/adam/pull/13): Cleaning up VCF<->ADAM pipeline
-* ISSUE [10](https://github.com/bigdatagenomics/adam/pull/10): Moved record field name enum over to the projections package.
-* ISSUE [8](https://github.com/bigdatagenomics/adam/pull/8): Fixes to sorting in ReferencePosition
-* ISSUE [5](https://github.com/bigdatagenomics/adam/pull/5): Modified reads2ref code to fix performance issue.
+* ISSUE [36](https://github.com/bigdatagenomics/quinine/pull/36): Misc contamination fixes
+* ISSUE [21](https://github.com/bigdatagenomics/quinine/pull/21): [QUININE-20] Adding allele frequency annotator.
+* ISSUE [19](https://github.com/bigdatagenomics/quinine/pull/19): Add contamination estimator
+* ISSUE [18](https://github.com/bigdatagenomics/quinine/pull/18): Targeted sequencing panel metrics
+* ISSUE [13](https://github.com/bigdatagenomics/quinine/pull/13): Re-renaming project.
+* ISSUE [10](https://github.com/bigdatagenomics/quinine/pull/10): Upgrade various dependencies
+* ISSUE [8](https://github.com/bigdatagenomics/quinine/pull/8): [QC-METRICS-7] update adam and plugin dependency versions
+* ISSUE [5](https://github.com/bigdatagenomics/quinine/pull/5): Fix minor code style issues
 
 ### Version 0.0.1 ###
-* ISSUE [3](https://github.com/bigdatagenomics/adam/pull/3): Adding in implicit conversion functions for going between Java and Scala...
-* ISSUE [1](https://github.com/bigdatagenomics/adam/pull/1): Fix scalatest configuration and fix unit tests
+* ISSUE [3](https://github.com/bigdatagenomics/quinine/pull/3): [QC-METRICS-2] Cleaned up package names.
+* ISSUE [1](https://github.com/bigdatagenomics/quinine/pull/1): Initial setup
