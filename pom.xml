@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bdgenomics.quinine</groupId>
   <artifactId>quinine-parent_2.10</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>quinine</name>
   <description>Read and Variant QC Metrics</description>
@@ -42,7 +42,7 @@
     <connection>scm:git:git@github.com:bigdatagenomics/quinine.git</connection>
     <developerConnection>scm:git:git@github.com:bigdatagenomics/quinine.git</developerConnection>
     <url>scm:git:git@github.com:bigdatagenomics/quinine.git</url>
-    <tag>quinine-parent_2.10-0.0.2</tag>
+    <tag>master</tag>
   </scm>
   <developers>
     <developer>
