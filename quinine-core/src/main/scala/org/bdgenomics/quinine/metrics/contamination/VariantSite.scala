@@ -52,17 +52,29 @@ private[contamination] object VariantSite extends Serializable {
     // and make an rdd keyed by the variant
     val homAltGenotypes = genotypes.filter(g => {
       g.getAlleles.forall(_ == GenotypeAllele.Alt)
-    }).map(g => (g.getVariant, null))
+    }).map(g => {
+      val v = g.getVariant
+      ((v.getContig.getContigName,
+        v.getStart,
+        v.getEnd,
+        v.getReferenceAllele,
+        v.getAlternateAllele), null)
+    })
 
     // map annotations to allele frequency and key by variant
     val frequencies = annotations.map(a => {
-      (a.getVariant, a.getThousandGenomesAlleleFrequency)
+      val v = a.getVariant
+      ((v.getContig.getContigName,
+        v.getStart,
+        v.getEnd,
+        v.getReferenceAllele,
+        v.getAlternateAllele), (v, a.getThousandGenomesAlleleFrequency))
     })
 
     // do join and emit sites
     homAltGenotypes.join(frequencies)
       .map(kv => {
-        val (variant, (_, frequency)) = kv
+        val (_, (_, (variant, frequency))) = kv
 
         VariantSite(variant, frequency.toDouble)
       })
