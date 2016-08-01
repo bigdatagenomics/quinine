@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.bdgenomics.quinine</groupId>
-    <artifactId>quinine-parent_2.11</artifactId>
+    <artifactId>quinine-parent_2.10</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>quinine-core_2.11</artifactId>
+  <artifactId>quinine-core_2.10</artifactId>
   <packaging>jar</packaging>
   <name>quinine: Core</name>
   <build>
@@ -84,25 +84,25 @@
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.11</artifactId>
+      <artifactId>spark-core_2.10</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scoverage</groupId>
-      <artifactId>scalac-scoverage-plugin_2.11</artifactId>
+      <artifactId>scalac-scoverage-plugin_2.10</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-core_2.11</artifactId>
+      <artifactId>adam-core_2.10</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-core_2.11</artifactId>
+      <artifactId>adam-core_2.10</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.utils</groupId>
-      <artifactId>utils-misc_2.11</artifactId>
+      <artifactId>utils-misc_2.10</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -116,12 +116,12 @@
     </dependency>
     <dependency>
       <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_2.11</artifactId>
+      <artifactId>scalatest_2.10</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.utils</groupId>
-      <artifactId>utils-misc_2.11</artifactId>
+      <artifactId>utils-misc_2.10</artifactId>
     </dependency>
   </dependencies>
 
