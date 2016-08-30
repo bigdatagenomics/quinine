@@ -75,8 +75,12 @@ object RNASeqPanelStats extends Serializable {
     // unpersist reads
     reads.unpersist()
 
+    def isTranscript(f: Feature): Boolean = {
+      f.getFeatureType == "transcript" || f.getFeatureType == "SO:0000673"
+    }
+
     // join coverage data against transcript features
-    val targetCoverageSites = BroadcastRegionJoin.partitionAndJoin(transcriptome.filter(_.getFeatureType == "transcript")
+    val targetCoverageSites = BroadcastRegionJoin.partitionAndJoin(transcriptome.filter(isTranscript)
       .keyBy(ReferenceRegion(_)),
       coverageObservations.map(kv => {
         val (pos, obs) = kv
