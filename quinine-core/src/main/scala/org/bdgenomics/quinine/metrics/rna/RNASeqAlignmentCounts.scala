@@ -40,10 +40,10 @@ private[rna] object RNASeqAlignmentCounts extends Serializable with Logging {
    */
   private def intragenic(feature: Feature): Option[RNASeqAlignmentCounts] = {
     feature.getFeatureType match {
-      case "transcript" => Some(RNASeqAlignmentCounts(0L, 1L, 0L, 0L, 0L))
-      case "exon"       => Some(RNASeqAlignmentCounts(0L, 0L, 1L, 0L, 0L))
-      case "intron"     => Some(RNASeqAlignmentCounts(0L, 0L, 0L, 1L, 0L))
-      case "rRNA"       => Some(RNASeqAlignmentCounts(0L, 0L, 0L, 0L, 1L))
+      case "transcript" | "SO:0000673" => Some(RNASeqAlignmentCounts(0L, 1L, 0L, 0L, 0L))
+      case "exon" | "SO:0000147"       => Some(RNASeqAlignmentCounts(0L, 0L, 1L, 0L, 0L))
+      case "intron" | "SO:0000188"     => Some(RNASeqAlignmentCounts(0L, 0L, 0L, 1L, 0L))
+      case "rRNA" | "SO:0000252"       => Some(RNASeqAlignmentCounts(0L, 0L, 0L, 0L, 1L))
       case s: String => {
         log.warn("Found unknown feature type %s. Ignoring.".format(s))
         None

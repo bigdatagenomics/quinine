@@ -34,14 +34,18 @@ private[rna] object TranscriptCounts extends Serializable {
   def apply(transcriptomeRdd: RDD[Feature],
             featureRdd: RDD[Option[Feature]]): TranscriptCounts = {
 
+    def isTranscript(f: Feature): Boolean = {
+      f.getFeatureType == "transcript" || f.getFeatureType == "SO:0000673"
+    }
+
     // count the number of transcripts
-    val transcripts = transcriptomeRdd.filter(_.getFeatureType == "transcript")
+    val transcripts = transcriptomeRdd.filter(isTranscript)
       .count
 
     // get the number of transcripts where there is at least one read
     // by filtering on transcripts and calling distinct
     val coveredTranscripts = featureRdd.flatMap(opt => {
-      opt.filter(f => f.getFeatureType == "transcript")
+      opt.filter(isTranscript)
         .map(f => f.getFeatureId)
     }).distinct
       .count

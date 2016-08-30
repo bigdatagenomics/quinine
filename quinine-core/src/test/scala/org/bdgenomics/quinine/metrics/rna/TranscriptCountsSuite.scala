@@ -28,7 +28,7 @@ class TranscriptCountsSuite extends ADAMFunSuite {
     .build()
 
   val transcript2 = Feature.newBuilder()
-    .setFeatureType("transcript")
+    .setFeatureType("SO:0000673")
     .setFeatureId("t2")
     .build()
 

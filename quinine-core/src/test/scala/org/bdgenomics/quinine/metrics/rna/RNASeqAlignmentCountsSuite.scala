@@ -42,6 +42,26 @@ class RNASeqAlignmentCountsSuite extends ADAMFunSuite {
     .setFeatureType("rRNA")
     .build()
 
+  val sequenceOntologyTranscript = Feature.newBuilder()
+    .setFeatureType("SO:0000673")
+    .build()
+
+  val sequenceOntologyExon = Feature.newBuilder()
+    .setFeatureType("SO:0000147")
+    .build()
+
+  val sequenceOntologyIntron = Feature.newBuilder()
+    .setFeatureType("SO:0000188")
+    .build()
+
+  val sequenceOntologyMisc = Feature.newBuilder()
+    .setFeatureType("SO:0000110")
+    .build()
+
+  val sequenceOntologyrRNA = Feature.newBuilder()
+    .setFeatureType("SO:0000252")
+    .build()
+
   def checkAndGet(countOpt: Option[RNASeqAlignmentCounts]): RNASeqAlignmentCounts = {
     assert(countOpt.isDefined)
     countOpt.get
@@ -100,6 +120,47 @@ class RNASeqAlignmentCountsSuite extends ADAMFunSuite {
 
   test("should get nothing if we pass a random feature") {
     val countOpt = RNASeqAlignmentCounts.fromOptFeature(Some(misc))
+    assert(countOpt.isEmpty)
+  }
+
+  test("should get an intragenic count if we pass an SO transcript") {
+    val count = wrapAndCall(sequenceOntologyTranscript)
+    assert(count.intergenic === 0L)
+    assert(count.intragenic === 1L)
+    assert(count.exonic === 0L)
+    assert(count.intronic === 0L)
+    assert(count.rRNA === 0L)
+  }
+
+  test("should get an exonic count if we pass an SO exon") {
+    val count = wrapAndCall(sequenceOntologyExon)
+    assert(count.intergenic === 0L)
+    assert(count.intragenic === 0L)
+    assert(count.exonic === 1L)
+    assert(count.intronic === 0L)
+    assert(count.rRNA === 0L)
+  }
+
+  test("should get an intronic count if we pass an SO intron") {
+    val count = wrapAndCall(sequenceOntologyIntron)
+    assert(count.intergenic === 0L)
+    assert(count.intragenic === 0L)
+    assert(count.exonic === 0L)
+    assert(count.intronic === 1L)
+    assert(count.rRNA === 0L)
+  }
+
+  test("should get an rRNA count if we pass an SO rRNA site") {
+    val count = wrapAndCall(sequenceOntologyrRNA)
+    assert(count.intergenic === 0L)
+    assert(count.intragenic === 0L)
+    assert(count.exonic === 0L)
+    assert(count.intronic === 0L)
+    assert(count.rRNA === 1L)
+  }
+
+  test("should get nothing if we pass a random SO feature") {
+    val countOpt = RNASeqAlignmentCounts.fromOptFeature(Some(sequenceOntologyMisc))
     assert(countOpt.isEmpty)
   }
 
