@@ -18,6 +18,7 @@
 package org.bdgenomics.quinine.metrics.contamination
 
 import org.apache.spark.SparkContext._
+import org.apache.spark.Logging
 import org.apache.spark.rdd.RDD
 import org.bdgenomics.adam.models.ReferenceRegion
 import org.bdgenomics.adam.util.PhredUtils
@@ -29,7 +30,6 @@ import org.bdgenomics.formats.avro.{
   Variant
 }
 import scala.collection.JavaConversions._
-import scala.math.log
 
 private[contamination] object VariantSite extends Serializable {
 
@@ -93,7 +93,7 @@ private[contamination] object VariantSite extends Serializable {
  * @param populationAlternateFrequency a frequency, specific to this Variant
  */
 private[contamination] case class VariantSite(variant: Variant,
-                                              minorAlleleFrequency: Double) {
+                                              minorAlleleFrequency: Double) extends Logging {
 
   /**
    * @return Returns the reference region that this variant site spans.
@@ -112,17 +112,26 @@ private[contamination] case class VariantSite(variant: Variant,
    *   error probability, and the minor allele frequency is passed.
    */
   def toObservation(read: AlignmentRecord): Option[Observation] = {
-    val offset = (variant.getStart - read.getStart).toInt
-    val readBase = read.getSequence.charAt(offset).toString
-    val baseQuality = read.getQual.charAt(offset).toInt - 33
-    val error = PhredUtils.phredToErrorProbability(baseQuality)
+    try {
+      val offset = (variant.getStart - read.getStart).toInt
+      val readBase = read.getSequence.charAt(offset).toString
+      val baseQuality = read.getQual.charAt(offset).toInt - 33
+      val error = PhredUtils.phredToErrorProbability(baseQuality)
 
-    if (readBase == variant.getReferenceAllele) {
-      Some(ReferenceObservation(error, minorAlleleFrequency))
-    } else if (readBase == variant.getAlternateAllele) {
-      Some(AlternateObservation(error, minorAlleleFrequency))
-    } else {
-      None
+      if (readBase == variant.getReferenceAllele) {
+        Some(ReferenceObservation(error, minorAlleleFrequency))
+      } else if (readBase == variant.getAlternateAllele) {
+        Some(AlternateObservation(error, minorAlleleFrequency))
+      } else {
+        None
+      }
+    } catch {
+      case t: Throwable => {
+        log.warn("Failed to create observation for read %s due to %s. Dropping...".format(
+          read.getReadName,
+          t))
+        None
+      }
     }
   }
 }

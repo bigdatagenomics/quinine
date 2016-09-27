@@ -88,6 +88,20 @@ class VariantSiteSuite extends FunSuite {
     assert(optObs.isEmpty)
   }
 
+  test("read has no bases and should fail on conversion") {
+    val read = AlignmentRecord.newBuilder()
+      .setContig(contig)
+      .setStart(100L)
+      .setEnd(101L)
+      .setSequence("")
+      .setQual("")
+      .build()
+
+    val optObs = variant.toObservation(read)
+
+    assert(optObs.isEmpty)
+  }
+
   def fpLogCompare(a: Double, b: Double, tol: Double = 1e-3): Boolean = {
     val logB = log(b)
     abs(a - logB) <= tol
