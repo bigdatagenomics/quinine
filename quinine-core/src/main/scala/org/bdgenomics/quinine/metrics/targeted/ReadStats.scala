@@ -213,7 +213,7 @@ private[targeted] object ReadStats extends Serializable {
       val ourAlignment = ReferenceRegion(read)
       val pairAlignment = ReferenceRegion(read.getMateContig.getContigName,
         read.getMateAlignmentStart,
-        read.getMateAlignmentEnd)
+        read.getMateAlignmentStart + 1) // FIXME
 
       // do our alignments overlap?
       if (ourAlignment.overlaps(pairAlignment)) {
