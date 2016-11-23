@@ -34,6 +34,7 @@ object QuinineMain extends Logging {
           CompareADAM,
           EstimateContamination,
           FindReads,
+          Inserts,
           PanelMetrics,
           RNAMetrics)),
       CommandGroup(
